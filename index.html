@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To The End — My Chemical Romance</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #8b0000;
+    --blood: #c0392b;
+    --crimson: #e74c3c;
+    --dark: #0d0d0d;
+    --text: #d4c5b0;
+    --dim: #7a6a5a;
+  }
+
+  body {
+    background: #020202;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Crimson Text', serif;
+    overflow-x: hidden;
+    padding: 20px 0;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(139,0,0,0.1) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 100%, rgba(139,0,0,0.07) 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .card {
+    position: relative; z-index: 1;
+    width: min(580px, 95vw);
+    background: var(--dark);
+    border: 1px solid rgba(139,0,0,0.25);
+    box-shadow:
+      0 0 0 1px rgba(139,0,0,0.08),
+      0 0 50px rgba(139,0,0,0.12),
+      0 0 100px rgba(0,0,0,0.9);
+    overflow: hidden;
+    animation: cardIn 1.2s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  @keyframes cardIn {
+    from { opacity:0; transform:translateY(24px) scale(0.97); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  /* ── VIDEO HERO ── */
+  .hero {
+    position: relative;
+    background: #000;
+    overflow: hidden;
+    height: 320px;
+  }
+
+  .hero video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.15) 0%,
+      rgba(0,0,0,0.0) 35%,
+      rgba(13,13,13,0.8) 80%,
+      #0d0d0d 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Subtle red vignette on sides */
+  .hero-vignette {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to right, rgba(80,0,0,0.25) 0%, transparent 30%, transparent 70%, rgba(80,0,0,0.25) 100%);
+    pointer-events: none;
+  }
+
+  .hero-title {
+    position: absolute;
+    bottom: 14px; left: 22px; right: 22px;
+  }
+  .hero-title h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(0.85rem,2.2vw,1rem);
+    color: var(--blood); letter-spacing: 5px; line-height: 1;
+  }
+  .hero-title h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem,6vw,2.8rem);
+    color: var(--text); letter-spacing: 3px; line-height: 1;
+    text-shadow: 2px 2px 0 var(--red), 0 0 24px rgba(139,0,0,0.5);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--blood), var(--crimson), var(--blood), transparent);
+    position: relative;
+  }
+  .divider::after {
+    content: '✦';
+    position: absolute; left:50%; top:50%;
+    transform: translate(-50%,-50%);
+    color: var(--crimson); background: var(--dark);
+    padding: 0 8px; font-size: 9px;
+  }
+
+  /* ── PLAYER ── */
+  .player { padding: 18px 22px 14px; background: rgba(0,0,0,0.35); }
+  audio { display: none; }
+
+  .player-info { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  .vinyl {
+    width:40px; height:40px; border-radius:50%;
+    background: repeating-conic-gradient(#1c1c1c 0deg 5deg, #282828 5deg 10deg);
+    border: 2px solid #2a2a2a;
+    box-shadow: inset 0 0 0 9px #0f0f0f, inset 0 0 0 11px #1e1e1e, inset 0 0 0 16px #0f0f0f;
+    flex-shrink: 0;
+  }
+  .vinyl.spinning { animation: spin 2.8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  .track-title { font-family:'Special Elite',cursive; font-size:1rem; color:var(--text); letter-spacing:1px; }
+  .track-album { font-size:0.75rem; color:var(--dim); font-style:italic; margin-top:2px; }
+
+  .progress-bar {
+    width:100%; height:3px;
+    background:rgba(139,0,0,0.2);
+    border-radius:2px; cursor:pointer; margin-bottom:5px;
+  }
+  .progress-fill {
+    height:100%; width:0%;
+    background: linear-gradient(to right, var(--red), var(--crimson));
+    border-radius:2px; position:relative;
+    transition: width .25s linear;
+  }
+  .progress-fill::after {
+    content:''; position:absolute;
+    right:-1px; top:50%; transform:translateY(-50%);
+    width:8px; height:8px; border-radius:50%;
+    background:var(--crimson); box-shadow:0 0 6px var(--crimson);
+  }
+  .time-row {
+    display:flex; justify-content:space-between;
+    font-size:0.68rem; color:var(--dim);
+    font-family:'Special Elite',cursive;
+  }
+
+  .waveform {
+    display:flex; align-items:center; gap:2px;
+    justify-content:center; height:18px; margin:8px 0 6px;
+  }
+  .wave-bar { width:3px; background:var(--red); border-radius:2px; opacity:.2; height:3px; }
+  .waveform.active .wave-bar { opacity:.6; animation:wv .7s ease-in-out infinite alternate; }
+  .wave-bar:nth-child(1){animation-delay:0s}.wave-bar:nth-child(2){animation-delay:.09s}
+  .wave-bar:nth-child(3){animation-delay:.18s}.wave-bar:nth-child(4){animation-delay:.04s}
+  .wave-bar:nth-child(5){animation-delay:.13s}.wave-bar:nth-child(6){animation-delay:.22s}
+  .wave-bar:nth-child(7){animation-delay:.07s}.wave-bar:nth-child(8){animation-delay:.16s}
+  .wave-bar:nth-child(9){animation-delay:.11s}.wave-bar:nth-child(10){animation-delay:.20s}
+  @keyframes wv { from{height:3px} to{height:16px} }
+
+  .controls { display:flex; align-items:center; justify-content:center; gap:14px; margin-top:8px; }
+  .btn {
+    background:none; border:none; cursor:pointer;
+    color:var(--dim); transition:color .2s,transform .1s; padding:4px; line-height:1;
+  }
+  .btn:hover { color:var(--crimson); }
+  .btn:active { transform:scale(0.9); }
+  .btn-play {
+    width:42px; height:42px; border-radius:50%;
+    background:var(--red); border:1px solid rgba(192,57,43,0.6);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 14px rgba(139,0,0,0.4);
+    transition:background .2s,box-shadow .2s,transform .1s; cursor:pointer;
+  }
+  .btn-play:hover { background:var(--blood); box-shadow:0 0 22px rgba(192,57,43,0.5); }
+  .btn-play:active { transform:scale(0.93); }
+
+  .volume-row { display:flex; align-items:center; gap:8px; margin-top:8px; }
+  .volume-row span { font-size:.7rem; color:var(--dim); }
+  input[type=range] {
+    -webkit-appearance:none; flex:1; height:2px;
+    background:rgba(139,0,0,0.2); border-radius:2px; outline:none; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance:none; width:10px; height:10px;
+    border-radius:50%; background:var(--crimson);
+  }
+
+  /* ── LYRICS ── */
+  .lyrics-section { padding:18px 22px 26px; border-top:1px solid rgba(139,0,0,0.12); }
+  .lyrics-header {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:.72rem; letter-spacing:5px;
+    color:var(--blood); margin-bottom:14px; text-align:center;
+  }
+  .lyrics-container { display:flex; flex-direction:column; }
+
+  .lyric-line {
+    padding:3px 0;
+    opacity:0; transform:translateY(8px);
+    transition:opacity .55s ease,transform .55s ease;
+  }
+  .lyric-line.visible { opacity:1; transform:translateY(0); }
+  .lyric-line.active .en { color:#fff; text-shadow:0 0 18px rgba(192,57,43,0.55); }
+  .lyric-line.active .es { color:var(--blood); }
+
+  .lyric-line.solo-label {
+    text-align:center; padding:10px 0;
+    opacity:0; transform:translateY(8px);
+    transition:opacity .55s ease,transform .55s ease;
+  }
+  .lyric-line.solo-label.visible { opacity:1; transform:translateY(0); }
+  .lyric-line.solo-label .en {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:.7rem; letter-spacing:4px; color:var(--dim);
+  }
+
+  .en {
+    font-family:'Special Elite',cursive;
+    font-size:clamp(.88rem,3vw,1.06rem);
+    color:var(--text); line-height:1.45;
+    transition:color .35s,text-shadow .35s;
+  }
+  .es {
+    font-family:'Crimson Text',serif;
+    font-size:clamp(.76rem,2.2vw,.88rem);
+    color:var(--dim); font-style:italic;
+    margin-top:1px; line-height:1.35;
+    transition:color .35s;
+  }
+
+  .splat { display:flex; gap:4px; justify-content:center; margin:14px 0 0; }
+  .splat span { width:3px; height:3px; border-radius:50%; background:var(--blood); opacity:.4; }
+
+  .card-footer { padding:10px 22px 16px; border-top:1px solid rgba(139,0,0,0.08); text-align:center; }
+  .card-footer p { font-size:.68rem; color:var(--dim); font-style:italic; letter-spacing:1px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- VIDEO HERO -->
+  <div class="hero">
+    <video
+      id="bgVideo"
+      src="gemini_generated_video_5232f242.mp4"
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="auto"
+    ></video>
+    <div class="hero-vignette"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-title">
+      <h2>My Chemical Romance</h2>
+      <h1>To The End</h1>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PLAYER -->
+  <div class="player">
+    <audio id="audio" preload="auto">
+      <source src="To the End.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="player-info">
+      <div class="vinyl" id="vinyl"></div>
+      <div class="track-info">
+        <div class="track-title">To The End</div>
+        <div class="track-album">Three Cheers for Sweet Revenge · 2004</div>
+      </div>
+    </div>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="time-row">
+      <span id="timeCurrent">0:00</span>
+      <span id="timeDuration">3:01</span>
+    </div>
+
+    <div class="waveform" id="waveform">
+      <div class="wave-bar"></div><div class="wave-bar"></div>
+      <div class="wave-bar"></div><div class="wave-bar"></div>
+      <div class="wave-bar"></div><div class="wave-bar"></div>
+      <div class="wave-bar"></div><div class="wave-bar"></div>
+      <div class="wave-bar"></div><div class="wave-bar"></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" onclick="seekRelative(-10)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/>
+        </svg>
+      </button>
+      <button class="btn btn-play" onclick="togglePlay()">
+        <svg id="iconPlay" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg id="iconPause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <button class="btn" onclick="seekRelative(10)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 6h2v12h-2zm-2.5 6L5 6v12z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="volume-row">
+      <span>♪</span>
+      <input type="range" min="0" max="1" step="0.05" value="0.8"
+             oninput="document.getElementById('audio').volume=this.value">
+    </div>
+  </div>
+
+  <!-- LYRICS -->
+  <div class="lyrics-section">
+    <div class="lyrics-header">— Lyrics —</div>
+    <div class="lyrics-container" id="lyricsContainer"></div>
+    <div class="splat">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <p>Three Cheers for Sweet Revenge · My Chemical Romance · 2004</p>
+  </div>
+</div>
+
+<script>
+const lyrics = [
+  { t:0,   en:"He calls the mansion, not a house, but a tomb",                es:"Llama a la mansión, no una casa, sino una tumba" },
+  { t:3,   en:"He's always choking from the stench and the fume",             es:"Siempre se ahoga por el hedor y el humo" },
+  { t:6,   en:"The wedding party all collapsed in the room",                   es:"La fiesta de bodas se derrumbó en la habitación" },
+  { t:9,   en:"So send my resignation to the bride and the groom",            es:"Así que manden mi renuncia a la novia y al novio" },
+  { t:11,  en:"Let's go down!",                                                es:"¡Vamos abajo!" },
+  { t:12,  en:"This elevator only goes up to ten",                            es:"Este elevador solo llega al piso diez" },
+  { t:15,  en:"He's not around, he's always looking at men",                  es:"No está aquí, siempre mirando a los hombres" },
+  { t:18,  en:"Down by the pool, he doesn't have many friends, as they are",  es:"Junto a la piscina, no tiene muchos amigos, tal como están" },
+  { t:20,  en:"Face down and bloated, snap a shot with the lens",             es:"Boca abajo e hinchado, toma una foto con el lente" },
+  { t:23,  en:"If you marry me",                                               es:"Si te casaras conmigo" },
+  { t:26,  en:"Would you bury me?",                                            es:"¿Me enterrarías?" },
+  { t:29,  en:"Would you carry me to the end?",                                es:"¿Me llevarías hasta el final?" },
+  { t:36,  en:"(So, say goodbye) To the vows you take",                       es:"(Y di adiós) a los votos que haces" },
+  { t:39,  en:"(And say goodbye) to the life you make",                       es:"(Y di adiós) a la vida que construiste" },
+  { t:41,  en:"(And say goodbye) to the heart you break",                     es:"(Y di adiós) al corazón que rompiste" },
+  { t:44,  en:"And all the cyanide you drank",                                es:"Y todo el cianuro que bebiste" },
+  { t:51,  en:"She keeps a picture of the body she lends",                    es:"Ella guarda una foto del cuerpo que presta" },
+  { t:53,  en:"Got nasty blisters from the money she spends",                 es:"Tiene ampollas feas del dinero que gasta" },
+  { t:56,  en:"She's got a life of her own and it shows by the Benz",         es:"Tiene su propia vida y lo demuestra con el Benz" },
+  { t:59,  en:"She drives at 90 by the Barbie's and Ken's",                   es:"Conduce a 90 entre los Barbies y los Kens" },
+  { t:62,  en:"If you ever say never, too late",                              es:"Si alguna vez dices nunca, es demasiado tarde" },
+  { t:65,  en:"I'll forget all the diamonds you ate",                         es:"Olvidaré todos los diamantes que comiste" },
+  { t:68,  en:"Lost in coma and covered in cake",                             es:"Perdido en coma y cubierto de pastel" },
+  { t:71,  en:"Increase the medication",                                       es:"Aumenten la medicación" },
+  { t:72,  en:"Share the vows at the wake (kiss the bride)",                  es:"Comparte los votos en el velorio (besa a la novia)" },
+  { t:74,  en:"If you marry me",                                               es:"Si te casaras conmigo" },
+  { t:76,  en:"Would you bury me?",                                            es:"¿Me enterrarías?" },
+  { t:79,  en:"Would you carry me to the end?",                                es:"¿Me llevarías hasta el final?" },
+  { t:86,  en:"(So, say goodbye) to the vows you take",                       es:"(Y di adiós) a los votos que haces" },
+  { t:88,  en:"(So, say goodbye) to the life you make",                       es:"(Y di adiós) a la vida que construiste" },
+  { t:93,  en:"(And say goodbye) to the heart you break",                     es:"(Y di adiós) al corazón que rompiste" },
+  { t:95,  en:"And all the cyanide you drank",                                es:"Y todo el cianuro que bebiste" },
+  { t:98,  en:"(And say goodbye) to the last parade",                         es:"(Y di adiós) al último desfile" },
+  { t:101, en:"(And walk away) from the choice you made",                     es:"(Y aléjate) de la elección que tomaste" },
+  { t:104, en:"(And say goodnight) to the hearts you break",                  es:"(Y di buenas noches) a los corazones que rompes" },
+  { t:105, en:"And all the cyanide you drank",                                es:"Y todo el cianuro que bebiste" },
+  { t:106, en:"And all the cyanide you drank",                                es:"Y todo el cianuro que bebiste" },
+  { t:110, en:"— Guitar Solo —", es:"", solo:true },
+  { t:133, en:"(So, say goodbye) To the vows you take",                       es:"(Y di adiós) a los votos que haces" },
+  { t:136, en:"(And say goodbye) to the life you make",                       es:"(Y di adiós) a la vida que construiste" },
+  { t:139, en:"(And say goodbye) to the heart you break",                     es:"(Y di adiós) al corazón que rompiste" },
+  { t:141, en:"And all the cyanide you drank",                                es:"Y todo el cianuro que bebiste" },
+  { t:144, en:"(And say goodbye) To the last parade",                         es:"(Y di adiós) al último desfile" },
+  { t:147, en:"(And walk away) from the choice you made",                     es:"(Y aléjate) de la elección que tomaste" },
+  { t:152, en:"(And say goodnight) to the hearts you break",                  es:"(Y di buenas noches) a los corazones que rompes" },
+  { t:154, en:"And all the cyanide you drank",                                es:"Y todo el cianuro que bebiste" },
+  { t:158, en:"To the last parade",                                            es:"Al último desfile" },
+  { t:161, en:"As the parties fade",                                           es:"Mientras las fiestas se desvanecen" },
+  { t:164, en:"And the choice you made (to the end)",                         es:"Y la elección que tomaste (hasta el final)" },
+];
+
+// Build lyrics DOM
+const container = document.getElementById('lyricsContainer');
+lyrics.forEach((line, i) => {
+  const div = document.createElement('div');
+  div.id = 'line-' + i;
+  if (line.solo) {
+    div.className = 'lyric-line solo-label';
+    div.innerHTML = `<div class="en">${line.en}</div>`;
+  } else {
+    div.className = 'lyric-line';
+    div.innerHTML = `<div class="en">${line.en}</div><div class="es">${line.es}</div>`;
+  }
+  container.appendChild(div);
+});
+
+// Audio
+const audio    = document.getElementById('audio');
+const vinyl    = document.getElementById('vinyl');
+const waveform = document.getElementById('waveform');
+const fill     = document.getElementById('progressFill');
+const bar      = document.getElementById('progressBar');
+const timeCur  = document.getElementById('timeCurrent');
+const timeDur  = document.getElementById('timeDuration');
+const iconPlay  = document.getElementById('iconPlay');
+const iconPause = document.getElementById('iconPause');
+const revealed  = new Set();
+
+audio.volume = 0.8;
+
+const fmt = s => `${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`;
+
+function togglePlay() {
+  audio.paused ? audio.play().catch(()=>{}) : audio.pause();
+}
+function seekRelative(d) {
+  audio.currentTime = Math.max(0, Math.min(audio.duration||181, audio.currentTime+d));
+}
+
+audio.addEventListener('play', () => {
+  vinyl.classList.add('spinning');
+  waveform.classList.add('active');
+  iconPlay.style.display = 'none';
+  iconPause.style.display = 'block';
+});
+audio.addEventListener('pause', () => {
+  vinyl.classList.remove('spinning');
+  waveform.classList.remove('active');
+  iconPlay.style.display = 'block';
+  iconPause.style.display = 'none';
+});
+audio.addEventListener('loadedmetadata', () => {
+  timeDur.textContent = fmt(audio.duration);
+});
+audio.addEventListener('timeupdate', () => {
+  const t = audio.currentTime;
+  const dur = audio.duration || 181;
+  fill.style.width = (t/dur*100)+'%';
+  timeCur.textContent = fmt(t);
+
+  lyrics.forEach((line, i) => {
+    const el = document.getElementById('line-'+i);
+    const next = lyrics[i+1];
+    if (t >= line.t && !revealed.has(i)) {
+      revealed.add(i);
+      el.classList.add('visible');
+    }
+    const active = t >= line.t && (!next || t < next.t);
+    el.classList.toggle('active', active);
+    if (active) el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  });
+});
+
+bar.addEventListener('click', e => {
+  const r = bar.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left) / r.width) * (audio.duration || 181);
+});
+
+setTimeout(() => document.getElementById('line-0')?.classList.add('visible'), 500);
+</script>
+</body>
+</html>
